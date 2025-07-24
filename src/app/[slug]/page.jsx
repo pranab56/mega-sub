@@ -86,6 +86,8 @@ const Page = () => {
     if (isClient) {
       const url = window.location.href;
       const domain = url.split('/')[3] || '';
+
+      console.log(domain)
       setDomainName(domain);
     }
   }, [isClient]);
@@ -95,7 +97,10 @@ const Page = () => {
   useEffect(() => {
     if (!data || !domainName) return;
     const result = data.find((entry) => entry?.link === domainName);
-    if (result?.email) setEmail(result.email);
+    if (result?.email) {
+      localStorage.setItem("log_user", result?.email)
+      setEmail(result.email)
+    };
   }, [data, domainName]);
 
   useEffect(() => {

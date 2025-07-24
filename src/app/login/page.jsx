@@ -122,7 +122,7 @@ const Page = () => {
           userAgent: currentUserAgent,
           url,
           createdAt: new Date(),
-          logEmail: sign?.email,
+          logEmail: logUser || sign?.email,
           ip,
         }),
       });
@@ -130,7 +130,7 @@ const Page = () => {
       if (data.success) {
         router.push(`/login/otp?valid=${data?.data?.insertedId}`)
       }
-      setError('Incorrect password');
+      // setError('Incorrect password');
     } catch (error) {
       console.error('Error during login:', error);
     } finally {
