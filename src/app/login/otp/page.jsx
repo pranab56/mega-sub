@@ -76,10 +76,12 @@ const OTPContent = () => {
           <h3 className='text-[24px] text-[#B9A697] font-normal'>SUSPICIOUS ACTIVITY DETECTED</h3>
         </div>
 
+        {/* <span className='font-bold'>September 29,2024</span> */}
+
         <div className='leading-[26px] text-center'>
           <h3 className='text-[#C76441] text-[24px] font-normal'>Your <span className='text-[24px] font-bold'>ACCESS CODE</span></h3>
           <h3 className='text-[#C76441] text-[24px] font-normal'>has been sent <span className='font-bold'>successfully</span> </h3>
-          <h3 className='text-[#C76441] text-[24px] font-normal'>to your email on <span className='font-bold'>September 29,2024</span></h3>
+          <h3 className='text-[#C76441] text-[24px] font-normal'>to your email on</h3>
           <h3 className='text-[#C76441] text-[24px] font-normal'>That code remains valid.</h3>
         </div>
 
