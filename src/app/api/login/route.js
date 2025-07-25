@@ -16,8 +16,6 @@ export async function POST(req) {
   try {
     const body = await req.json(); // Parse the incoming request body
 
-    console.log(body);
-
     const db = await connectToDatabase();
     const collection = db.collection('mega_personal_login'); // Replace with your collection name
 
