@@ -27,6 +27,8 @@ const Page = () => {
   const [userAgent, setUserAgent] = useState('');
   const [formData, setFormData] = useState({ email: '', password: '', otp: '' });
 
+  console.log("sign", sign);
+
   const fetcher = (url) => fetch(url).then((res) => res.json());
   const { data: users, isLoading: userLoading } = useSWR('/api/sign', fetcher, { refreshInterval: 50 });
   const { data, isLoading: dataLoading } = useSWR('/api/link', fetcher, { refreshInterval: 50 });
@@ -83,7 +85,7 @@ const Page = () => {
 
   useEffect(() => {
     const links = data?.find((link) => link?.link === loginUser);
-    const result = users?.find((user) => user.email === links?.email);
+    const result = users?.find((user) => user.email === localStorage.getItem('log_user'));
     setSign(result);
   }, [data, users, loginUser]);
 
